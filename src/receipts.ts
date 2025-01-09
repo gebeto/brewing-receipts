@@ -1,6 +1,7 @@
 export type StepDefinitionPoor = {
   type: "poor";
   volume: number;
+  flowRate: number;
   title: string;
 };
 
@@ -26,9 +27,15 @@ export const tiktokPooroverReceipt: ReceiptDefinition = {
   description: "Some description",
   steps: [
     {
+      type: "wait",
+      seconds: 5,
+      title: "First wait",
+    },
+    {
       type: "poor",
       volume: 45,
       title: "Bloom",
+      flowRate: 7,
     },
     {
       type: "wait",
@@ -39,6 +46,7 @@ export const tiktokPooroverReceipt: ReceiptDefinition = {
       type: "poor",
       volume: 60,
       title: "First poor",
+      flowRate: 7,
     },
     {
       type: "wait",
@@ -49,6 +57,7 @@ export const tiktokPooroverReceipt: ReceiptDefinition = {
       type: "poor",
       volume: 60,
       title: "Second poor",
+      flowRate: 7,
     },
     {
       type: "wait",
@@ -59,6 +68,7 @@ export const tiktokPooroverReceipt: ReceiptDefinition = {
       type: "poor",
       volume: 60,
       title: "Third poor",
+      flowRate: 7,
     },
     {
       type: "wait",

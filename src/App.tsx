@@ -1,4 +1,4 @@
-import { MemoryRouter as Router, Routes, Route, Link } from "react-router";
+import { HashRouter as Router, Routes, Route, Link } from "react-router";
 
 import logo from "./assets/coffee.png";
 import "./App.css";
@@ -8,7 +8,7 @@ import { Receipt } from "./Receipt";
 
 function App() {
   return (
-    <Router initialEntries={["/"]}>
+    <Router>
       <Routes>
         <Route
           path="/"

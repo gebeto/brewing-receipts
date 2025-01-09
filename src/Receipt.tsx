@@ -9,8 +9,13 @@ import {
   ReceiptDefinition,
 } from "./receipts";
 
-const useTimer = (seconds: number, active: boolean) => {
+import beepShort from "./assets/beep-short.mp3";
+import beepLong from "./assets/beep-long.mp3";
+
+const useTimer = (seconds: number, active: boolean, onDone?: () => void) => {
   const [time, setTime] = React.useState(seconds);
+  const onDoneRef = React.useRef(onDone);
+  onDoneRef.current = onDone;
 
   React.useEffect(() => {
     if (!active) {
@@ -24,6 +29,7 @@ const useTimer = (seconds: number, active: boolean) => {
 
         if (v <= 0) {
           clearInterval(interval);
+          onDoneRef.current?.();
         }
 
         return v;
@@ -43,7 +49,19 @@ type StepProps<T extends StepDefinition> = T & {
 };
 
 const StepWait = (props: StepProps<StepDefinitionWait>) => {
-  const timer = useTimer(props.seconds, props.active);
+  const timer = useTimer(props.seconds, props.active, props.onNext);
+
+  React.useEffect(() => {
+    if (timer === 2) {
+      new Audio(beepShort).play();
+    }
+    if (timer === 1) {
+      new Audio(beepShort).play();
+    }
+    if (timer === 0) {
+      new Audio(beepLong).play();
+    }
+  }, [timer]);
   return (
     <div>
       <motion.h2>Wait</motion.h2>
@@ -55,10 +73,15 @@ const StepWait = (props: StepProps<StepDefinitionWait>) => {
 };
 
 const StepPoor = (props: StepProps<StepDefinitionPoor>) => {
+  const timer = useTimer(
+    Math.ceil(props.volume / props.flowRate),
+    props.active
+  );
   return (
     <div>
       <motion.h2>Poor</motion.h2>
       <motion.h2 style={{ fontSize: 60 }}>{props.volume}ml</motion.h2>
+      <motion.h2 style={{ fontSize: 60 }}>{timer}</motion.h2>
     </div>
   );
 };
