@@ -9,8 +9,11 @@ import {
   ReceiptDefinition,
 } from "./receipts";
 
-import beepShort from "./assets/beep-short.mp3";
-import beepLong from "./assets/beep-long.mp3";
+import beepShortSrc from "./assets/beep-short.mp3";
+import beepLongSrc from "./assets/beep-long.mp3";
+
+const beepShort = new Audio(beepShortSrc);
+const beepLong = new Audio(beepLongSrc);
 
 const useTimer = (seconds: number, active: boolean, onDone?: () => void) => {
   const [time, setTime] = React.useState(seconds);
@@ -53,13 +56,13 @@ const StepWait = (props: StepProps<StepDefinitionWait>) => {
 
   React.useEffect(() => {
     if (timer === 2) {
-      new Audio(beepShort).play();
+      beepShort.play();
     }
     if (timer === 1) {
-      new Audio(beepShort).play();
+      beepShort.play();
     }
     if (timer === 0) {
-      new Audio(beepLong).play();
+      beepLong.play();
     }
   }, [timer]);
   return (
