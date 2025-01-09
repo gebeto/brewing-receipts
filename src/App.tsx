@@ -1,5 +1,3 @@
-import React from "react";
-
 import { MemoryRouter as Router, Routes, Route, Link } from "react-router";
 
 import logo from "./assets/coffee.png";
