@@ -43,10 +43,7 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/receipt/:id"
-          element={<Receipt receipt={receipts[0]} />}
-        />
+        <Route path="/receipt/:id" element={<Receipt />} />
       </Routes>
     </Router>
   );

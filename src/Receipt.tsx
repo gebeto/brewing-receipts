@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { AnimatePresence, motion } from "motion/react";
-import { ReceiptDefinition } from "./receipts";
+import { ReceiptDefinition, receipts } from "./receipts";
 import { Step } from "./Step";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 const StepperRoot = styled(motion.div)`
   display: flex;
@@ -119,8 +119,10 @@ const EndStep: React.FC<{ onEnd: () => void }> = ({ onEnd }) => {
   );
 };
 
-export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
+export const Receipt = () => {
   const [currentStep, setStep] = React.useState(-1);
+  const receiptId = useParams<string>().id ?? "0";
+  const receipt = receipts[parseInt(receiptId)];
 
   return (
     <StepperRoot>

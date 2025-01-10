@@ -107,42 +107,32 @@ export const tiktokPooroverReceipt: ReceiptDefinition = {
     {
       type: "poor",
       volume: 45,
+      seconds: 45,
       title: "Bloom",
     },
     {
-      type: "wait",
-      seconds: 45,
-      title: "First wait",
-    },
-    {
       type: "poor",
       volume: 60,
+      seconds: 45,
       title: "First poor",
     },
     {
-      type: "wait",
-      seconds: 45,
-      title: "Second wait",
-    },
-    {
       type: "poor",
       volume: 60,
+      seconds: 45,
       title: "Second poor",
     },
     {
-      type: "wait",
+      type: "poor",
+      volume: 60,
       seconds: 45,
-      title: "Third wait",
+      title: "Third poor",
     },
     {
       type: "poor",
       volume: 60,
-      title: "Third poor",
-    },
-    {
-      type: "wait",
       seconds: 45,
-      title: "Forth wait",
+      title: "Forth poor",
     },
   ],
 };
