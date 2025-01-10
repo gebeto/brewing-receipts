@@ -18,14 +18,13 @@ const StepRoot = styled(motion.div)`
   color: #000;
   border-radius: 16px;
 
-  min-height: 45vh;
+  min-height: 60vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
 
   text-align: center;
   border: 1px solid #ddd;
-  padding: 16px;
 `;
 
 const Header: React.FC<{ receipt: ReceiptDefinition }> = ({ receipt }) => {
@@ -40,16 +39,17 @@ const Header: React.FC<{ receipt: ReceiptDefinition }> = ({ receipt }) => {
   }, [receipt.steps]);
 
   const receiptBrewingTime = React.useMemo(() => {
-    const waitingTime = receipt.steps.reduce((acc, step) => {
+    const seconds = receipt.steps.reduce((acc, step) => {
       if (step.type === "wait") {
+        return acc + step.seconds;
+      }
+      if (step.type === "poor") {
         return acc + step.seconds;
       }
       return acc;
     }, 0);
-    const poorTime = receiptVolume / receipt.flowRate;
-    const seconds = Math.round(waitingTime + poorTime);
     return `~${Math.floor(seconds / 60)}:${seconds % 60}`;
-  }, [receipt, receiptVolume]);
+  }, [receipt]);
 
   return (
     <motion.div
@@ -162,7 +162,7 @@ export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
                 initial={currentStep === index ? "focused" : "unfocused"}
                 animate={currentStep === index ? "focused" : "unfocused"}
               >
-                <motion.div>
+                <motion.div style={{ padding: 16 }}>
                   <Step
                     step={step}
                     active={currentStep === index}
@@ -175,24 +175,15 @@ export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
                 {index === currentStep && (
                   <motion.div
                     style={{
-                      display: "flex",
-                      gap: 8,
-                      justifyContent: "center",
+                      padding: 16,
+                      borderTop: "1px solid #ddd",
                     }}
                   >
-                    <motion.button
-                      onClick={() => setStep((count) => count - 1)}
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      style={{ flex: 1 }}
-                    >
-                      Back
-                    </motion.button>
                     <motion.button
                       onClick={() => setStep((count) => count + 1)}
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      style={{ flex: 3 }}
+                      style={{ width: "100%" }}
                     >
                       Next
                     </motion.button>

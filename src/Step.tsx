@@ -69,11 +69,21 @@ export const StepPoor = (props: StepProps<StepDefinitionPoor>) => {
       />
       <motion.h2 style={{ fontSize: 60, fontFamily: "monospace" }}>
         <Timer
-          seconds={Math.ceil(props.volume / props.flowRate)}
+          seconds={props.seconds}
           active={props.active}
-          beeps={{
-            0: "long",
-          }}
+          beeps={
+            props.seconds
+              ? {
+                  3: "short",
+                  2: "short",
+                  1: "short",
+                  0: "long",
+                }
+              : {
+                  0: "long",
+                }
+          }
+          onDone={props.seconds ? props.onNext : undefined}
         />
       </motion.h2>
       <motion.h2 style={{ fontSize: 50, fontWeight: 400 }}>
