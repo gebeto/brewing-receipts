@@ -10,6 +10,7 @@ import goosneckSrc from "./assets/goosneck.png";
 import waitSrc from "./assets/wait.png";
 
 export type StepProps<T extends StepDefinition> = T & {
+  index: number;
   active: boolean;
   generalVolume: number;
   onNext?: () => void;
@@ -53,7 +54,20 @@ export const StepWait = (props: StepProps<StepDefinitionWait>) => {
 export const StepPoor = (props: StepProps<StepDefinitionPoor>) => {
   return (
     <div>
-      <motion.h2>Poor {props.volume}ml</motion.h2>
+      <motion.div
+        style={{
+          borderBottom: "1px solid #ddd",
+          display: "flex",
+          flexDirection: "row",
+        }}
+      >
+        <motion.h2
+          style={{ padding: 16, borderRight: "1px solid #ddd", width: 40 }}
+        >
+          {props.index + 1}
+        </motion.h2>
+        <motion.h2 style={{ padding: 16 }}>Poor {props.volume}ml</motion.h2>
+      </motion.div>
       <motion.img
         src={goosneckSrc}
         alt="poor"
@@ -101,8 +115,10 @@ export const Step = ({
   active,
   generalVolume,
   onNext,
+  index,
 }: {
   step: StepDefinition;
+  index: number;
   generalVolume: number;
   active: boolean;
   onNext?: () => void;
@@ -112,6 +128,7 @@ export const Step = ({
     return (
       <StepPoor
         {...step}
+        index={index}
         active={active}
         onNext={onNext}
         generalVolume={generalVolume}
@@ -122,6 +139,7 @@ export const Step = ({
     return (
       <StepWait
         {...step}
+        index={index}
         active={active}
         onNext={onNext}
         generalVolume={generalVolume}

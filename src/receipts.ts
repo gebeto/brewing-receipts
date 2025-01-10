@@ -14,6 +14,7 @@ export type StepDefinition = StepDefinitionPoor | StepDefinitionWait;
 
 export type ReceiptDefinition = {
   title: string;
+  poorOver: ("kalita" | "v60" | "chemex")[];
   description: string;
   coffeeWeight: number;
   flowRate: number;
@@ -22,6 +23,7 @@ export type ReceiptDefinition = {
 
 export const best21Receipt: ReceiptDefinition = {
   title: "Best 21g 375ml",
+  poorOver: ["kalita"],
   coffeeWeight: 21,
   flowRate: 7,
   description: "Some description",
@@ -95,6 +97,7 @@ export const best21Receipt: ReceiptDefinition = {
 
 export const tiktokPooroverReceipt: ReceiptDefinition = {
   title: "TikTok Poor Over",
+  poorOver: ["kalita", "v60", "chemex"],
   coffeeWeight: 18,
   flowRate: 7,
   description: "Some description",

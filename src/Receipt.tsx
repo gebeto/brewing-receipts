@@ -20,7 +20,7 @@ const StepRoot = styled(motion.div)`
   background-color: #fff;
   border-radius: 16px;
 
-  min-height: 60vh;
+  min-height: 70vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -29,28 +29,36 @@ const StepRoot = styled(motion.div)`
   border: 1px solid #ddd;
 `;
 
+const calcReceiptVolume = (receipt: ReceiptDefinition) => {
+  return receipt.steps.reduce((acc, step) => {
+    if (step.type === "poor") {
+      return acc + step.volume;
+    }
+    return acc;
+  }, 0);
+};
+
+const calcReceiptBrewingTime = (receipt: ReceiptDefinition) => {
+  const seconds = receipt.steps.reduce((acc, step) => {
+    if (step.type === "wait") {
+      return acc + step.seconds;
+    }
+    if (step.type === "poor") {
+      return acc + step.seconds;
+    }
+    return acc;
+  }, 0);
+  return `${Math.floor(seconds / 60)}:${seconds % 60}`;
+};
+
 const Header: React.FC<{ receipt: ReceiptDefinition }> = ({ receipt }) => {
   const navigate = useNavigate();
   const receiptVolume = React.useMemo(() => {
-    return receipt.steps.reduce((acc, step) => {
-      if (step.type === "poor") {
-        return acc + step.volume;
-      }
-      return acc;
-    }, 0);
-  }, [receipt.steps]);
+    return calcReceiptVolume(receipt);
+  }, [receipt]);
 
   const receiptBrewingTime = React.useMemo(() => {
-    const seconds = receipt.steps.reduce((acc, step) => {
-      if (step.type === "wait") {
-        return acc + step.seconds;
-      }
-      if (step.type === "poor") {
-        return acc + step.seconds;
-      }
-      return acc;
-    }, 0);
-    return `~${Math.floor(seconds / 60)}:${seconds % 60}`;
+    return calcReceiptBrewingTime(receipt);
   }, [receipt]);
 
   return (
@@ -83,7 +91,7 @@ const StartStep: React.FC<{
   return (
     <motion.div
       style={{
-        minHeight: "50vh",
+        minHeight: "200px",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -141,29 +149,99 @@ export const Receipt = () => {
       <Header receipt={receipt} />
       <motion.div style={{ padding: 16 }}>
         {currentStep === -1 && (
-          <StartStep
-            key={currentStep}
-            onStart={() => setStep((count) => count + 1)}
-          />
+          <>
+            <StartStep onStart={() => setStep((count) => count + 1)} />
+            <motion.div
+              style={{
+                padding: 16,
+                paddingBottom: 10,
+                paddingTop: 0,
+              }}
+            >
+              <motion.h3>Steps overview</motion.h3>
+            </motion.div>
+            <motion.div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                backgroundColor: "#fff",
+                borderRadius: 16,
+                border: "1px solid #ddd",
+                overflow: "hidden",
+              }}
+            >
+              {receipt.steps.map((step, index) => (
+                <motion.div
+                  key={index}
+                  style={{
+                    borderBottom: "1px solid #ddd",
+                    flex: 1,
+                  }}
+                >
+                  {step.type === "poor" && (
+                    <motion.div style={{ display: "flex" }}>
+                      <motion.div
+                        style={{
+                          padding: 16,
+                          width: 20,
+                          fontWeight: 700,
+                          textAlign: "center",
+                          borderRight: "1px solid #ddd",
+                        }}
+                      >
+                        {index + 1}
+                      </motion.div>
+                      <motion.div style={{ padding: 16 }}>
+                        Poor <strong>{step.volume}ml</strong>{" "}
+                        {step.seconds && (
+                          <span>
+                            for <strong>{step.seconds} seconds</strong>
+                          </span>
+                        )}
+                      </motion.div>
+                    </motion.div>
+                  )}
+                  {step.type === "wait" && (
+                    <motion.div style={{ display: "flex" }}>
+                      <motion.div
+                        style={{
+                          padding: 16,
+                          width: 20,
+                          fontWeight: 700,
+                          textAlign: "center",
+                          borderRight: "1px solid #ddd",
+                        }}
+                      >
+                        {index + 1}
+                      </motion.div>
+                      <motion.div style={{ padding: 16 }}>
+                        Wait for <strong>{step.seconds} seconds</strong>
+                      </motion.div>
+                    </motion.div>
+                  )}
+                </motion.div>
+              ))}
+            </motion.div>
+            <StartStep onStart={() => setStep((count) => count + 1)} />
+          </>
         )}
         <AnimatePresence mode="popLayout">
           {step && (
             <StepRoot
               layout
               key={currentStep}
-              initial={{ scale: 0.96, x: 130, opacity: 0 }}
+              initial={{ scale: 0.9, x: 130, opacity: 0 }}
               animate={{ scale: 1, x: 0, opacity: 1 }}
-              exit={{ scale: 0.96, x: -130, opacity: 0 }}
+              exit={{ scale: 0.9, x: -130, opacity: 0 }}
             >
-              <motion.div style={{ padding: 16 }}>
-                <Step
-                  step={step}
-                  active={true}
-                  generalVolume={generalVolume}
-                  onNext={() => setStep((count) => count + 1)}
-                  onBack={() => setStep((count) => count - 1)}
-                />
-              </motion.div>
+              <Step
+                step={step}
+                index={currentStep}
+                active={true}
+                generalVolume={generalVolume}
+                onNext={() => setStep((count) => count + 1)}
+                onBack={() => setStep((count) => count - 1)}
+              />
               <motion.div style={{ flex: 1 }} />
               <motion.div
                 style={{
