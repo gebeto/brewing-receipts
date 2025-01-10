@@ -26,9 +26,11 @@ function App() {
           element={
             <>
               <div>
-                <a href="https://react.dev" target="_blank">
-                  <Logo src={logo} alt="logo" />
-                </a>
+                <Logo
+                  src={logo}
+                  alt="logo"
+                  onClick={() => window.location.reload()}
+                />
               </div>
               <h1 style={{ textAlign: "center", marginBottom: 24 }}>
                 Brewing Receipts
