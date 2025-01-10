@@ -1,4 +1,4 @@
-import { motion, cubicBezier } from "motion/react";
+import { motion } from "motion/react";
 import {
   StepDefinitionPoor,
   StepDefinitionWait,
