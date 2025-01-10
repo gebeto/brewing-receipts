@@ -56,16 +56,16 @@ const StepWait = (props: StepProps<StepDefinitionWait>) => {
   React.useEffect(() => {
     switch (timer) {
       case 3:
-        beep({ duration: 150 });
+        beep();
         break;
       case 2:
-        beep({ duration: 200 });
+        beep();
         break;
       case 1:
-        beep({ duration: 250 });
+        beep();
         break;
       case 0:
-        beep({ duration: 300, freq: 1000 });
+        beep(false);
         break;
     }
   }, [timer]);
@@ -173,6 +173,7 @@ export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
           return (
             <motion.div
               layout
+              className="step"
               key={index}
               style={{
                 minHeight: "45vh",
@@ -180,18 +181,15 @@ export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
                 flexDirection: "column",
                 justifyContent: "center",
               }}
-              initial={{ scale: 1, opacity: 1.0 }}
-              animate={{ scale: 1, opacity: 1.0 }}
               exit={{ scale: 0.8, opacity: 0 }}
+              variants={{
+                focused: { scale: 1, opacity: 1.0 },
+                unfocused: { scale: 0.8, opacity: 0.9 },
+              }}
+              initial={currentStep !== index ? "unfocused" : "focused"}
+              animate={currentStep !== index ? "unfocused" : "focused"}
             >
-              <motion.div
-                variants={{
-                  focused: { scale: 1, opacity: 1.0 },
-                  unfocused: { scale: 0.6, opacity: 0.6 },
-                }}
-                initial={currentStep !== index ? "unfocused" : "focused"}
-                animate={currentStep !== index ? "unfocused" : "focused"}
-              >
+              <motion.div>
                 <StepRenderer
                   step={step}
                   active={currentStep === index}

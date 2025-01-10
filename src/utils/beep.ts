@@ -1,17 +1,10 @@
-const audioContext = new AudioContext();
-export const beep = ({
-  duration = 100,
-  freq = 800,
-}: {
-  duration?: number;
-  freq?: number;
-}) => {
-  const oscillator = audioContext.createOscillator();
-  oscillator.type = "sine";
-  oscillator.frequency.value = freq;
-  oscillator.connect(audioContext.destination);
-  oscillator.start();
-  setTimeout(() => {
-    oscillator.stop();
-  }, duration);
+import { Synth } from "tone";
+
+export const beep = (short = true) => {
+  const synth = new Synth().toDestination();
+  if (short) {
+    synth.triggerAttackRelease("C4", "8n");
+  } else {
+    synth.triggerAttackRelease("C5", "4n");
+  }
 };

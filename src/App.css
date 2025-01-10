@@ -1,11 +1,9 @@
 #root {
-  max-width: 1280px;
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  height: 100vh;
+  flex: 1;
 }
 
 .logo {
@@ -24,10 +22,19 @@
   justify-content: flex-start;
   flex-direction: column;
   gap: 1em;
+
+  /* background-color: #fff; */
+  max-width: 600px;
+  width: 600px;
+  /* color: #fff; */
+  border-radius: 16px;
 }
 
 .step {
-  padding: 2em;
+  color: #000;
+  /* padding: 2em; */
+  /* background-color: #fff; */
+  border-radius: 16px;
 }
 
 .step-faded {
