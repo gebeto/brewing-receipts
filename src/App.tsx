@@ -1,10 +1,21 @@
 import { HashRouter as Router, Routes, Route, Link } from "react-router";
+import styled from "@emotion/styled";
 
 import logo from "./assets/coffee.png";
-import "./App.css";
 
 import { receipts } from "./receipts";
 import { Receipt } from "./Receipt";
+
+const Logo = styled.img`
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+
+  &:hover {
+    filter: drop-shadow(0 0 2em #646cffaa);
+  }
+`;
 
 function App() {
   return (
@@ -16,7 +27,7 @@ function App() {
             <>
               <div>
                 <a href="https://react.dev" target="_blank">
-                  <img src={logo} className="logo react" alt="React logo" />
+                  <Logo src={logo} alt="logo" />
                 </a>
               </div>
               <h1>Brewing Receipts</h1>

@@ -1,118 +1,38 @@
 import React from "react";
-
+import styled from "@emotion/styled";
 import { AnimatePresence, motion } from "motion/react";
+import { ReceiptDefinition } from "./receipts";
+import { Step } from "./Step";
 
-import {
-  StepDefinitionPoor,
-  StepDefinitionWait,
-  StepDefinition,
-  ReceiptDefinition,
-} from "./receipts";
-import { beep } from "./utils/beep";
+const StepperRoot = styled(motion.div)`
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  flex: 1;
+  gap: 1em;
 
-const useTimer = (seconds: number, active: boolean, onDone?: () => void) => {
-  const [time, setTime] = React.useState(seconds);
+  /* background-color: #fff; */
+  max-width: 600px;
+  width: 600px;
+  /* color: #fff; */
+  border-radius: 16px;
+  /* overflow-x: hidden;
+  overflow-y: hidden; */
+`;
 
-  const timeRef = React.useRef(time);
-  timeRef.current = time;
+const StepRoot = styled(motion.div)`
+  color: #000;
+  /* padding: 2em; */
+  /* background-color: red; */
+  border-radius: 16px;
 
-  const onDoneRef = React.useRef(onDone);
-  onDoneRef.current = onDone;
+  min-height: 45vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
-  React.useEffect(() => {
-    if (!active) {
-      setTime(seconds);
-      return;
-    }
-
-    const interval = setInterval(() => {
-      const v = Math.round((timeRef.current - 0.1) * 100) / 100;
-
-      if (v < 0) {
-        clearInterval(interval);
-        onDoneRef.current?.();
-        return;
-      }
-
-      setTime(v);
-      return;
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, [active, seconds]);
-
-  return time;
-};
-
-type StepProps<T extends StepDefinition> = T & {
-  active: boolean;
-  onNext?: () => void;
-  onBack?: () => void;
-};
-
-const StepWait = (props: StepProps<StepDefinitionWait>) => {
-  const timer = useTimer(props.seconds, props.active, props.onNext);
-
-  React.useEffect(() => {
-    switch (timer) {
-      case 3:
-        beep();
-        break;
-      case 2:
-        beep();
-        break;
-      case 1:
-        beep();
-        break;
-      case 0:
-        beep(false);
-        break;
-    }
-  }, [timer]);
-  return (
-    <div>
-      <motion.h2>Wait</motion.h2>
-      <motion.h2 style={{ fontSize: 60, fontFamily: "monospace" }}>
-        {timer.toFixed(1)}
-      </motion.h2>
-    </div>
-  );
-};
-
-const StepPoor = (props: StepProps<StepDefinitionPoor>) => {
-  const timer = useTimer(
-    Math.ceil(props.volume / props.flowRate),
-    props.active
-  );
-  return (
-    <div>
-      <motion.h2>Poor</motion.h2>
-      <motion.h2 style={{ fontSize: 60 }}>{props.volume}ml</motion.h2>
-      <motion.h2 style={{ fontSize: 60, fontFamily: "monospace" }}>
-        {timer.toFixed(1)}
-      </motion.h2>
-    </div>
-  );
-};
-
-const StepRenderer = ({
-  step,
-  active,
-  onNext,
-}: {
-  step: StepDefinition;
-  active: boolean;
-  onNext?: () => void;
-  onBack?: () => void;
-}) => {
-  if (step.type === "poor") {
-    return <StepPoor {...step} active={active} onNext={onNext} />;
-  }
-  if (step.type === "wait") {
-    return <StepWait {...step} active={active} onNext={onNext} />;
-  }
-  return null;
-};
+  min-width: 100%;
+`;
 
 export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
   const [currentStep, setStep] = React.useState(-1);
@@ -139,7 +59,7 @@ export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
   }, [receipt, receiptVolume]);
 
   return (
-    <div className="stepper">
+    <StepperRoot>
       <AnimatePresence mode="popLayout">
         <motion.div>
           <motion.h2>
@@ -165,65 +85,62 @@ export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
             </motion.div>
           )}
         </motion.div>
-        {receipt.steps.map((step, index) => {
-          if (currentStep > index) {
-            return null;
-          }
+        <motion.div
+          style={{ display: "flex", flexDirection: "column", gap: 8 }}
+        >
+          {receipt.steps.map((step, index) => {
+            if (currentStep > index) {
+              return null;
+            }
 
-          return (
-            <motion.div
-              layout
-              className="step"
-              key={index}
-              style={{
-                minHeight: "45vh",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              variants={{
-                focused: { scale: 1, opacity: 1.0 },
-                unfocused: { scale: 0.8, opacity: 0.9 },
-              }}
-              initial={currentStep !== index ? "unfocused" : "focused"}
-              animate={currentStep !== index ? "unfocused" : "focused"}
-            >
-              <motion.div>
-                <StepRenderer
-                  step={step}
-                  active={currentStep === index}
-                  onNext={() => setStep((count) => count + 1)}
-                  onBack={() => setStep((count) => count - 1)}
-                />
-              </motion.div>
-              {index === currentStep && (
-                <motion.div
-                  style={{
-                    display: "flex",
-                    gap: 8,
-                    justifyContent: "center",
-                  }}
-                >
-                  <motion.button
-                    onClick={() => setStep((count) => count - 1)}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                  >
-                    Back
-                  </motion.button>
-                  <motion.button
-                    onClick={() => setStep((count) => count + 1)}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                  >
-                    Next
-                  </motion.button>
+            return (
+              <StepRoot
+                layout
+                key={index}
+                exit={{ scale: 0.8, opacity: 0 }}
+                variants={{
+                  focused: { scale: 1, opacity: 1.0 },
+                  unfocused: { scale: 0.8, opacity: 0.9 },
+                }}
+                initial={currentStep !== index ? "unfocused" : "focused"}
+                animate={currentStep !== index ? "unfocused" : "focused"}
+              >
+                <motion.div>
+                  <Step
+                    step={step}
+                    active={currentStep === index}
+                    onNext={() => setStep((count) => count + 1)}
+                    onBack={() => setStep((count) => count - 1)}
+                  />
                 </motion.div>
-              )}
-            </motion.div>
-          );
-        })}
+                {index === currentStep && (
+                  <motion.div
+                    style={{
+                      display: "flex",
+                      gap: 8,
+                      justifyContent: "center",
+                    }}
+                  >
+                    <motion.button
+                      onClick={() => setStep((count) => count - 1)}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                    >
+                      Back
+                    </motion.button>
+                    <motion.button
+                      onClick={() => setStep((count) => count + 1)}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                    >
+                      Next
+                    </motion.button>
+                  </motion.div>
+                )}
+              </StepRoot>
+            );
+          })}
+        </motion.div>
         {currentStep === receipt.steps.length && (
           <motion.div
             style={{
@@ -246,6 +163,6 @@ export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </StepperRoot>
   );
 };
