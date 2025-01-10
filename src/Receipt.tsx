@@ -8,15 +8,14 @@ import {
   StepDefinition,
   ReceiptDefinition,
 } from "./receipts";
-
-import beepShortSrc from "./assets/beep-short.mp3";
-import beepLongSrc from "./assets/beep-long.mp3";
-
-const beepShort = new Audio(beepShortSrc);
-const beepLong = new Audio(beepLongSrc);
+import { beep } from "./utils/beep";
 
 const useTimer = (seconds: number, active: boolean, onDone?: () => void) => {
   const [time, setTime] = React.useState(seconds);
+
+  const timeRef = React.useRef(time);
+  timeRef.current = time;
+
   const onDoneRef = React.useRef(onDone);
   onDoneRef.current = onDone;
 
@@ -27,16 +26,16 @@ const useTimer = (seconds: number, active: boolean, onDone?: () => void) => {
     }
 
     const interval = setInterval(() => {
-      setTime((time) => {
-        const v = Math.round((time - 0.1) * 100) / 100;
+      const v = Math.round((timeRef.current - 0.1) * 100) / 100;
 
-        if (v <= 0) {
-          clearInterval(interval);
-          onDoneRef.current?.();
-        }
+      if (v < 0) {
+        clearInterval(interval);
+        onDoneRef.current?.();
+        return;
+      }
 
-        return v;
-      });
+      setTime(v);
+      return;
     }, 100);
 
     return () => clearInterval(interval);
@@ -55,14 +54,19 @@ const StepWait = (props: StepProps<StepDefinitionWait>) => {
   const timer = useTimer(props.seconds, props.active, props.onNext);
 
   React.useEffect(() => {
-    if (timer === 2) {
-      beepShort.play();
-    }
-    if (timer === 1) {
-      beepShort.play();
-    }
-    if (timer === 0) {
-      beepLong.play();
+    switch (timer) {
+      case 3:
+        beep({ duration: 150 });
+        break;
+      case 2:
+        beep({ duration: 200 });
+        break;
+      case 1:
+        beep({ duration: 250 });
+        break;
+      case 0:
+        beep({ duration: 300, freq: 1000 });
+        break;
     }
   }, [timer]);
   return (
@@ -84,7 +88,9 @@ const StepPoor = (props: StepProps<StepDefinitionPoor>) => {
     <div>
       <motion.h2>Poor</motion.h2>
       <motion.h2 style={{ fontSize: 60 }}>{props.volume}ml</motion.h2>
-      <motion.h2 style={{ fontSize: 60 }}>{timer}</motion.h2>
+      <motion.h2 style={{ fontSize: 60, fontFamily: "monospace" }}>
+        {timer.toFixed(1)}
+      </motion.h2>
     </div>
   );
 };
