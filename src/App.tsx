@@ -30,7 +30,9 @@ function App() {
                   <Logo src={logo} alt="logo" />
                 </a>
               </div>
-              <h1>Brewing Receipts</h1>
+              <h1 style={{ textAlign: "center", marginBottom: 24 }}>
+                Brewing Receipts
+              </h1>
               <div>
                 {receipts.map((receipt, index) => (
                   <li key={index}>
@@ -43,12 +45,7 @@ function App() {
         />
         <Route
           path="/receipt/:id"
-          element={
-            <>
-              <Link to="/">Back</Link>
-              <Receipt receipt={receipts[0]} />
-            </>
-          }
+          element={<Receipt receipt={receipts[0]} />}
         />
       </Routes>
     </Router>

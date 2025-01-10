@@ -67,9 +67,6 @@ export const StepPoor = (props: StepProps<StepDefinitionPoor>) => {
           duration: 1.4,
         }}
       />
-      <motion.h2 style={{ fontSize: 60 }}>
-        up to {props.generalVolume + props.volume}ml
-      </motion.h2>
       <motion.h2 style={{ fontSize: 60, fontFamily: "monospace" }}>
         <Timer
           seconds={Math.ceil(props.volume / props.flowRate)}
@@ -78,6 +75,12 @@ export const StepPoor = (props: StepProps<StepDefinitionPoor>) => {
             0: "long",
           }}
         />
+      </motion.h2>
+      <motion.h2 style={{ fontSize: 50, fontWeight: 400 }}>
+        up to{" "}
+        <motion.strong style={{ fontWeight: 900 }}>
+          {props.generalVolume + props.volume}ml
+        </motion.strong>
       </motion.h2>
     </div>
   );

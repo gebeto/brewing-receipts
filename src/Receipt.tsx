@@ -3,27 +3,19 @@ import styled from "@emotion/styled";
 import { AnimatePresence, motion } from "motion/react";
 import { ReceiptDefinition } from "./receipts";
 import { Step } from "./Step";
+import { useNavigate } from "react-router";
 
 const StepperRoot = styled(motion.div)`
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
   flex: 1;
-  gap: 1em;
-
-  /* background-color: #fff; */
-  max-width: 600px;
-  width: 600px;
-  /* color: #fff; */
+  width: 100%;
   border-radius: 16px;
-  /* overflow-x: hidden;
-  overflow-y: hidden; */
 `;
 
 const StepRoot = styled(motion.div)`
   color: #000;
-  /* padding: 2em; */
-  /* background-color: red; */
   border-radius: 16px;
 
   min-height: 45vh;
@@ -31,12 +23,13 @@ const StepRoot = styled(motion.div)`
   flex-direction: column;
   justify-content: center;
 
-  min-width: 100%;
+  text-align: center;
+  border: 1px solid #ddd;
+  padding: 16px;
 `;
 
-export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
-  const [currentStep, setStep] = React.useState(-1);
-
+const Header: React.FC<{ receipt: ReceiptDefinition }> = ({ receipt }) => {
+  const navigate = useNavigate();
   const receiptVolume = React.useMemo(() => {
     return receipt.steps.reduce((acc, step) => {
       if (step.type === "poor") {
@@ -59,34 +52,90 @@ export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
   }, [receipt, receiptVolume]);
 
   return (
+    <motion.div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 16,
+        borderBottom: "1px solid #ddd",
+        padding: 16,
+      }}
+    >
+      <motion.button onClick={() => navigate("/")}>{"<"}</motion.button>
+      <motion.div>
+        <motion.h3>{receipt.title}</motion.h3>
+        <motion.h6>
+          Time: {receiptBrewingTime}, {receiptVolume}ml
+        </motion.h6>
+        <motion.h6>Volume: {receiptVolume}ml</motion.h6>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+const StartStep: React.FC<{
+  onStart: () => void;
+}> = ({ onStart }) => {
+  return (
+    <motion.div
+      style={{
+        minHeight: "50vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      initial={{ scale: 1 }}
+      animate={{ scale: 1 }}
+      exit={{ scale: 0, opacity: 0 }}
+    >
+      <motion.button onClick={onStart}>START</motion.button>
+    </motion.div>
+  );
+};
+
+const EndStep: React.FC<{ onEnd: () => void }> = ({ onEnd }) => {
+  return (
+    <motion.div
+      style={{
+        minHeight: "50vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 16,
+      }}
+    >
+      <motion.h2>Enjoy your cup of coffee ❤️</motion.h2>
+      <motion.button
+        onClick={onEnd}
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0, opacity: 0 }}
+      >
+        Back to start
+      </motion.button>
+    </motion.div>
+  );
+};
+
+export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
+  const [currentStep, setStep] = React.useState(-1);
+
+  return (
     <StepperRoot>
+      <Header receipt={receipt} />
       <AnimatePresence mode="popLayout">
-        <motion.div>
-          <motion.h2>
-            {receipt.title}
-            <br />
-            {receiptBrewingTime}, {receiptVolume}ml
-          </motion.h2>
-          {currentStep === -1 && (
-            <motion.div
-              style={{
-                minHeight: "50vh",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              initial={{ scale: 1 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
-            >
-              <motion.button onClick={() => setStep((count) => count + 1)}>
-                START
-              </motion.button>
-            </motion.div>
-          )}
-        </motion.div>
+        {currentStep === -1 && (
+          <StartStep onStart={() => setStep((count) => count + 1)} />
+        )}
         <motion.div
-          style={{ display: "flex", flexDirection: "column", gap: 8 }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+            padding: 16,
+          }}
         >
           {receipt.steps.map((step, index, arr) => {
             if (currentStep > index) {
@@ -108,10 +157,10 @@ export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
                 exit={{ scale: 0.8, opacity: 0 }}
                 variants={{
                   focused: { scale: 1, opacity: 1.0 },
-                  unfocused: { scale: 0.8, opacity: 0.9 },
+                  unfocused: { scale: 0.8, opacity: 0.4 },
                 }}
-                initial={currentStep !== index ? "unfocused" : "focused"}
-                animate={currentStep !== index ? "unfocused" : "focused"}
+                initial={currentStep === index ? "focused" : "unfocused"}
+                animate={currentStep === index ? "focused" : "unfocused"}
               >
                 <motion.div>
                   <Step
@@ -122,6 +171,7 @@ export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
                     onBack={() => setStep((count) => count - 1)}
                   />
                 </motion.div>
+                <motion.div style={{ flex: 1 }} />
                 {index === currentStep && (
                   <motion.div
                     style={{
@@ -134,6 +184,7 @@ export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
                       onClick={() => setStep((count) => count - 1)}
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
+                      style={{ flex: 1 }}
                     >
                       Back
                     </motion.button>
@@ -141,6 +192,7 @@ export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
                       onClick={() => setStep((count) => count + 1)}
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
+                      style={{ flex: 3 }}
                     >
                       Next
                     </motion.button>
@@ -151,25 +203,7 @@ export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
           })}
         </motion.div>
         {currentStep === receipt.steps.length && (
-          <motion.div
-            style={{
-              minHeight: "50vh",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <motion.h2>Enjoy your cup of coffee ❤️</motion.h2>
-            <motion.button
-              onClick={() => setStep(-1)}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
-            >
-              Back to start
-            </motion.button>
-          </motion.div>
+          <EndStep onEnd={() => setStep(-1)} />
         )}
       </AnimatePresence>
     </StepperRoot>
