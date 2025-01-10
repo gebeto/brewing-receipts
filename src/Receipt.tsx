@@ -88,10 +88,18 @@ export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
         <motion.div
           style={{ display: "flex", flexDirection: "column", gap: 8 }}
         >
-          {receipt.steps.map((step, index) => {
+          {receipt.steps.map((step, index, arr) => {
             if (currentStep > index) {
               return null;
             }
+
+            const prevSteps = arr.slice(0, index);
+            const generalVolume = prevSteps.reduce((acc, step) => {
+              if (step.type === "poor") {
+                return acc + step.volume;
+              }
+              return acc;
+            }, 0);
 
             return (
               <StepRoot
@@ -109,6 +117,7 @@ export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
                   <Step
                     step={step}
                     active={currentStep === index}
+                    generalVolume={generalVolume}
                     onNext={() => setStep((count) => count + 1)}
                     onBack={() => setStep((count) => count - 1)}
                   />
@@ -151,7 +160,7 @@ export const Receipt = ({ receipt }: { receipt: ReceiptDefinition }) => {
               justifyContent: "center",
             }}
           >
-            <motion.h2>Done!</motion.h2>
+            <motion.h2>Enjoy your cup of coffee ❤️</motion.h2>
             <motion.button
               onClick={() => setStep(-1)}
               initial={{ scale: 0 }}

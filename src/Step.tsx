@@ -1,92 +1,51 @@
-import React from "react";
 import { motion } from "motion/react";
 import {
   StepDefinitionPoor,
   StepDefinitionWait,
   StepDefinition,
 } from "./receipts";
-import { beep } from "./utils/beep";
-
-const useTimer = (seconds: number, active: boolean, onDone?: () => void) => {
-  const [time, setTime] = React.useState(seconds);
-
-  const timeRef = React.useRef(time);
-  timeRef.current = time;
-
-  const onDoneRef = React.useRef(onDone);
-  onDoneRef.current = onDone;
-
-  React.useEffect(() => {
-    if (!active) {
-      setTime(seconds);
-      return;
-    }
-
-    const interval = setInterval(() => {
-      const v = Math.round((timeRef.current - 0.1) * 100) / 100;
-
-      if (v < 0) {
-        clearInterval(interval);
-        onDoneRef.current?.();
-        return;
-      }
-
-      setTime(v);
-      return;
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, [active, seconds]);
-
-  return time;
-};
+import { Timer } from "./Timer";
 
 export type StepProps<T extends StepDefinition> = T & {
   active: boolean;
+  generalVolume: number;
   onNext?: () => void;
   onBack?: () => void;
 };
 
 export const StepWait = (props: StepProps<StepDefinitionWait>) => {
-  const timer = useTimer(props.seconds, props.active, props.onNext);
-
-  React.useEffect(() => {
-    switch (timer) {
-      case 3:
-        beep();
-        break;
-      case 2:
-        beep();
-        break;
-      case 1:
-        beep();
-        break;
-      case 0:
-        beep(false);
-        break;
-    }
-  }, [timer]);
   return (
     <div>
       <motion.h2>Wait</motion.h2>
       <motion.h2 style={{ fontSize: 60, fontFamily: "monospace" }}>
-        {timer.toFixed(1)}
+        <Timer
+          seconds={props.seconds}
+          active={props.active}
+          onDone={props.onNext}
+          beeps={{
+            3: "short",
+            2: "short",
+            1: "short",
+            0: "long",
+          }}
+        />
       </motion.h2>
     </div>
   );
 };
 
 export const StepPoor = (props: StepProps<StepDefinitionPoor>) => {
-  const timer = useTimer(
-    Math.ceil(props.volume / props.flowRate),
-    props.active
-  );
   return (
     <div>
-      <motion.h2>Poor</motion.h2>
-      <motion.h2 style={{ fontSize: 60 }}>{props.volume}ml</motion.h2>
+      <motion.h2>Poor {props.volume}ml</motion.h2>
+      <motion.h2 style={{ fontSize: 60 }}>
+        up to {props.generalVolume + props.volume}ml
+      </motion.h2>
       <motion.h2 style={{ fontSize: 60, fontFamily: "monospace" }}>
-        {timer.toFixed(1)}
+        <Timer
+          seconds={Math.ceil(props.volume / props.flowRate)}
+          active={props.active}
+        />
       </motion.h2>
     </div>
   );
@@ -95,18 +54,34 @@ export const StepPoor = (props: StepProps<StepDefinitionPoor>) => {
 export const Step = ({
   step,
   active,
+  generalVolume,
   onNext,
 }: {
   step: StepDefinition;
+  generalVolume: number;
   active: boolean;
   onNext?: () => void;
   onBack?: () => void;
 }) => {
   if (step.type === "poor") {
-    return <StepPoor {...step} active={active} onNext={onNext} />;
+    return (
+      <StepPoor
+        {...step}
+        active={active}
+        onNext={onNext}
+        generalVolume={generalVolume}
+      />
+    );
   }
   if (step.type === "wait") {
-    return <StepWait {...step} active={active} onNext={onNext} />;
+    return (
+      <StepWait
+        {...step}
+        active={active}
+        onNext={onNext}
+        generalVolume={generalVolume}
+      />
+    );
   }
   return null;
 };
