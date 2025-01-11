@@ -43,7 +43,9 @@ const StepHeader: React.FC<{
       >
         {props.index + 1}/{props.count}
       </motion.h3>
-      <motion.h2 style={{ padding: 16 }}>{props.children}</motion.h2>
+      <motion.h2 style={{ padding: 16, lineHeight: "40px" }}>
+        {props.children}
+      </motion.h2>
     </motion.div>
   );
 };

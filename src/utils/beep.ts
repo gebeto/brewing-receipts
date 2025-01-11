@@ -1,7 +1,13 @@
 import { Beep } from "./beeper";
 
 const beeper = new Beep(1, "sine");
-beeper.init();
+let initialized = false;
+
+document.body.addEventListener("click", () => {
+  if (initialized) return;
+  beeper.init();
+  initialized = true;
+});
 
 export type BeepType = "short" | "long";
 

@@ -20,12 +20,17 @@ export const Header: React.FC<{ receipt: ReceiptDefinition }> = ({
   return (
     <motion.div
       style={{
+        position: "sticky",
+        top: 0,
+        left: 0,
+        width: "100%",
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
         gap: 16,
         borderBottom: "1px solid #ddd",
         backgroundColor: "#fff",
+        borderRadius: 0,
         padding: 16,
       }}
     >
