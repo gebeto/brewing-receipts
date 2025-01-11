@@ -3,13 +3,16 @@ import {
   StepDefinitionPoor,
   StepDefinitionWait,
   StepDefinition,
+  ReceiptDefinition,
 } from "../receipts";
 import { Timer } from "../Timer";
 
 import goosneckSrc from "../assets/goosneck.png";
 import waitSrc from "../assets/wait.png";
 
-export type StepProps<T extends StepDefinition> = T & {
+export type StepProps<T extends StepDefinition> = {
+  step: T;
+  receipt: ReceiptDefinition;
   index: number;
   active: boolean;
   generalVolume: number;
@@ -17,10 +20,40 @@ export type StepProps<T extends StepDefinition> = T & {
   onBack?: () => void;
 };
 
+const StepHeader: React.FC<{
+  index: number;
+  count: number;
+  children: React.ReactNode;
+}> = (props) => {
+  return (
+    <motion.div
+      style={{
+        borderBottom: "1px solid #ddd",
+        display: "flex",
+        flexDirection: "row",
+      }}
+    >
+      <motion.h3
+        style={{
+          padding: 16,
+          borderRight: "1px solid #ddd",
+          width: 40,
+          lineHeight: "40px",
+        }}
+      >
+        {props.index + 1}/{props.count}
+      </motion.h3>
+      <motion.h2 style={{ padding: 16 }}>{props.children}</motion.h2>
+    </motion.div>
+  );
+};
+
 export const StepWait = (props: StepProps<StepDefinitionWait>) => {
   return (
     <div>
-      <motion.h2>Wait</motion.h2>
+      <StepHeader index={props.index} count={10}>
+        Wait for {props.step.seconds}
+      </StepHeader>
       <motion.img
         src={waitSrc}
         alt="wait"
@@ -36,7 +69,7 @@ export const StepWait = (props: StepProps<StepDefinitionWait>) => {
       />
       <motion.h2 style={{ fontSize: 60, fontFamily: "monospace" }}>
         <Timer
-          seconds={props.seconds}
+          seconds={props.step.seconds}
           active={props.active}
           onDone={props.onNext}
           beeps={{
@@ -54,20 +87,9 @@ export const StepWait = (props: StepProps<StepDefinitionWait>) => {
 export const StepPoor = (props: StepProps<StepDefinitionPoor>) => {
   return (
     <div>
-      <motion.div
-        style={{
-          borderBottom: "1px solid #ddd",
-          display: "flex",
-          flexDirection: "row",
-        }}
-      >
-        <motion.h2
-          style={{ padding: 16, borderRight: "1px solid #ddd", width: 40 }}
-        >
-          {props.index + 1}
-        </motion.h2>
-        <motion.h2 style={{ padding: 16 }}>Poor {props.volume}ml</motion.h2>
-      </motion.div>
+      <StepHeader index={props.index} count={props.receipt.steps.length}>
+        Poor {props.step.volume}ml
+      </StepHeader>
       <motion.img
         src={goosneckSrc}
         alt="poor"
@@ -83,10 +105,10 @@ export const StepPoor = (props: StepProps<StepDefinitionPoor>) => {
       />
       <motion.h2 style={{ fontSize: 60, fontFamily: "monospace" }}>
         <Timer
-          seconds={props.seconds}
+          seconds={props.step.seconds}
           active={props.active}
           beeps={
-            props.seconds
+            props.step.seconds
               ? {
                   3: "short",
                   2: "short",
@@ -97,54 +119,25 @@ export const StepPoor = (props: StepProps<StepDefinitionPoor>) => {
                   0: "long",
                 }
           }
-          onDone={props.seconds ? props.onNext : undefined}
+          onDone={props.step.seconds ? props.onNext : undefined}
         />
       </motion.h2>
       <motion.h2 style={{ fontSize: 50, fontWeight: 400 }}>
         up to{" "}
         <motion.strong style={{ fontWeight: 900 }}>
-          {props.generalVolume + props.volume}ml
+          {props.generalVolume + props.step.volume}ml
         </motion.strong>
       </motion.h2>
     </div>
   );
 };
 
-export const Step = ({
-  step,
-  active,
-  generalVolume,
-  onNext,
-  index,
-}: {
-  step: StepDefinition;
-  index: number;
-  generalVolume: number;
-  active: boolean;
-  onNext?: () => void;
-  onBack?: () => void;
-}) => {
+export const Step = ({ step, ...props }: StepProps<StepDefinition>) => {
   if (step.type === "poor") {
-    return (
-      <StepPoor
-        {...step}
-        index={index}
-        active={active}
-        onNext={onNext}
-        generalVolume={generalVolume}
-      />
-    );
+    return <StepPoor step={step} {...props} />;
   }
   if (step.type === "wait") {
-    return (
-      <StepWait
-        {...step}
-        index={index}
-        active={active}
-        onNext={onNext}
-        generalVolume={generalVolume}
-      />
-    );
+    return <StepWait step={step} {...props} />;
   }
   return null;
 };

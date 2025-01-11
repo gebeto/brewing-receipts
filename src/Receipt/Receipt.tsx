@@ -182,6 +182,7 @@ export const Receipt = () => {
             >
               <Step
                 step={step}
+                receipt={receipt}
                 index={currentStep}
                 active={true}
                 generalVolume={generalVolume}

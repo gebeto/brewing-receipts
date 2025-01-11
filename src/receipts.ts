@@ -140,7 +140,36 @@ export const tiktokPooroverReceipt: ReceiptDefinition = {
   ],
 };
 
+export const simplyGood18300Receipt: ReceiptDefinition = {
+  title: "Simply Good 18g 300ml",
+  poorOver: ["kalita", "v60"],
+  coffeeWeight: 18,
+  flowRate: 7,
+  description: "Some description",
+  steps: [
+    {
+      type: "poor",
+      volume: 50,
+      seconds: 30,
+      title: "Bloom",
+    },
+    {
+      type: "poor",
+      volume: 100,
+      seconds: 60,
+      title: "First poor",
+    },
+    {
+      type: "poor",
+      volume: 150,
+      seconds: 90,
+      title: "Second poor",
+    },
+  ],
+};
+
 export const receipts: ReceiptDefinition[] = [
   best21Receipt,
+  simplyGood18300Receipt,
   tiktokPooroverReceipt,
 ];
