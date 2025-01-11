@@ -3,11 +3,11 @@ import {
   StepDefinitionPoor,
   StepDefinitionWait,
   StepDefinition,
-} from "./receipts";
-import { Timer } from "./Timer";
+} from "../receipts";
+import { Timer } from "../Timer";
 
-import goosneckSrc from "./assets/goosneck.png";
-import waitSrc from "./assets/wait.png";
+import goosneckSrc from "../assets/goosneck.png";
+import waitSrc from "../assets/wait.png";
 
 export type StepProps<T extends StepDefinition> = T & {
   index: number;

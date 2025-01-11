@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { AnimatePresence, motion } from "motion/react";
-import { ReceiptDefinition, receipts } from "./receipts";
+import { receipts } from "../receipts";
 import { Step } from "./Step";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
+import { Header } from "./Header";
+import { Button } from "../components/Button";
 
 const ReceiptRoot = styled(motion.div)`
   display: flex;
@@ -29,62 +31,6 @@ const StepRoot = styled(motion.div)`
   border: 1px solid #ddd;
 `;
 
-const calcReceiptVolume = (receipt: ReceiptDefinition) => {
-  return receipt.steps.reduce((acc, step) => {
-    if (step.type === "poor") {
-      return acc + step.volume;
-    }
-    return acc;
-  }, 0);
-};
-
-const calcReceiptBrewingTime = (receipt: ReceiptDefinition) => {
-  const seconds = receipt.steps.reduce((acc, step) => {
-    if (step.type === "wait") {
-      return acc + step.seconds;
-    }
-    if (step.type === "poor") {
-      return acc + step.seconds;
-    }
-    return acc;
-  }, 0);
-  return `${Math.floor(seconds / 60)}:${seconds % 60}`;
-};
-
-const Header: React.FC<{ receipt: ReceiptDefinition }> = ({ receipt }) => {
-  const navigate = useNavigate();
-  const receiptVolume = React.useMemo(() => {
-    return calcReceiptVolume(receipt);
-  }, [receipt]);
-
-  const receiptBrewingTime = React.useMemo(() => {
-    return calcReceiptBrewingTime(receipt);
-  }, [receipt]);
-
-  return (
-    <motion.div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 16,
-        borderBottom: "1px solid #ddd",
-        backgroundColor: "#fff",
-        padding: 16,
-      }}
-    >
-      <motion.button onClick={() => navigate("/")}>{"<"}</motion.button>
-      <motion.div>
-        <motion.h3>{receipt.title}</motion.h3>
-        <motion.h6>
-          Time: {receiptBrewingTime}, {receiptVolume}ml
-        </motion.h6>
-        <motion.h6>Volume: {receiptVolume}ml</motion.h6>
-      </motion.div>
-    </motion.div>
-  );
-};
-
 const StartStep: React.FC<{
   onStart: () => void;
 }> = ({ onStart }) => {
@@ -100,7 +46,7 @@ const StartStep: React.FC<{
       animate={{ scale: 1 }}
       exit={{ scale: 0.8, opacity: 0.4 }}
     >
-      <motion.button onClick={onStart}>START</motion.button>
+      <Button onClick={onStart}>START</Button>
     </motion.div>
   );
 };
@@ -118,14 +64,14 @@ const EndStep: React.FC<{ onEnd: () => void }> = ({ onEnd }) => {
       }}
     >
       <motion.h2>Enjoy your cup of coffee ❤️</motion.h2>
-      <motion.button
+      <Button
         onClick={onEnd}
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         exit={{ scale: 0, opacity: 0 }}
       >
         Back to start
-      </motion.button>
+      </Button>
     </motion.div>
   );
 };
@@ -249,12 +195,12 @@ export const Receipt = () => {
                   borderTop: "1px solid #ddd",
                 }}
               >
-                <motion.button
+                <Button
                   onClick={() => setStep((count) => count + 1)}
                   style={{ width: "100%" }}
                 >
                   Next
-                </motion.button>
+                </Button>
               </motion.div>
             </StepRoot>
           )}
