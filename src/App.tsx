@@ -5,6 +5,7 @@ import logo from "./assets/coffee.png";
 
 import { receipts } from "./receipts";
 import { Receipt } from "./Receipt";
+import { Weights } from "./Weights";
 
 const Logo = styled.img`
   height: 6em;
@@ -42,10 +43,15 @@ function App() {
                   </li>
                 ))}
               </div>
+
+              <div>
+                <Link to={`/weights`}>Weights</Link>
+              </div>
             </>
           }
         />
         <Route path="/receipt/:id" element={<Receipt />} />
+        <Route path="/weights" element={<Weights />} />
       </Routes>
     </Router>
   );
