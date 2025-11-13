@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export const Weights: React.FC = () => {
   const [zeroWeight, setZeroWeight] = React.useState<number>(0);
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["weightsData"],
     queryFn: async () => {
       try {
