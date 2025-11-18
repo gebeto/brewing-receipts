@@ -1,11 +1,17 @@
 import { HashRouter as Router, Routes, Route, Link } from "react-router";
 import styled from "@emotion/styled";
 
-import logo from "./assets/coffee.png";
-
 import { receipts } from "./receipts";
 import { Receipt } from "./Receipt";
 import { Weights } from "./Weights";
+import {
+  Divider,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Paper,
+} from "@mui/material";
 
 const Logo = styled.img`
   height: 6em;
@@ -26,27 +32,23 @@ function App() {
           path="/"
           element={
             <>
-              <div>
-                <Logo
-                  src={logo}
-                  alt="logo"
-                  onClick={() => window.location.reload()}
-                />
-              </div>
-              <h1 style={{ textAlign: "center", marginBottom: 24 }}>
-                Brewing Receipts
-              </h1>
-              <div>
-                {receipts.map((receipt, index) => (
-                  <li key={index}>
-                    <Link to={`/receipt/${index}`}>{receipt.title}</Link>
-                  </li>
-                ))}
-              </div>
-
-              <div>
-                <Link to={`/weights`}>Weights</Link>
-              </div>
+              <Paper sx={{ mt: 3 }}>
+                <List>
+                  {receipts.map((receipt, index) => (
+                    <ListItemButton
+                      component={Link}
+                      to={`/receipt/${index}`}
+                      key={index}
+                    >
+                      <ListItemText primary={receipt.title} />
+                    </ListItemButton>
+                  ))}
+                  <Divider />
+                  <ListItem component={Link} to={`/weights`}>
+                    <ListItemText primary={"Weights"} />
+                  </ListItem>
+                </List>
+              </Paper>
             </>
           }
         />
