@@ -1,6 +1,35 @@
 import React from "react";
 import { WeightsContext, WeightsProvider } from "../components/weights";
-import { Button, Paper } from "@mui/material";
+import { Box, Button, Paper, Typography } from "@mui/material";
+import { AspectRatio, Scale } from "@mui/icons-material";
+
+const InfoCard: React.FC<{
+  Icon: React.ReactNode;
+  title: string;
+  children: React.ReactNode;
+}> = ({ Icon, title, children }) => (
+  <Paper
+    variant="outlined"
+    sx={{
+      p: 2,
+      display: "flex",
+      flex: 1,
+      flexDirection: "column",
+      justifyContent: "space-between",
+      minHeight: 100,
+    }}
+  >
+    <Box display={"flex"} justifyContent={"space-between"}>
+      <Box>{Icon}</Box>
+      <Box>{title}</Box>
+    </Box>
+    <Box>
+      <Typography variant="body2" color="textSecondary">
+        {children}
+      </Typography>
+    </Box>
+  </Paper>
+);
 
 export const Weights: React.FC = () => {
   return (
@@ -17,15 +46,16 @@ export const Weights: React.FC = () => {
               gap: 2,
             }}
           >
-            <Paper variant="outlined" sx={{ p: 2 }}>
-              <h2>Weights Page</h2>
-            </Paper>
-            <Paper variant="outlined" sx={{ p: 2 }}>
-              <p>This is where weight-related information will be displayed.</p>
-            </Paper>
-            <Paper variant="outlined" sx={{ p: 2 }}>
-              <h1>{weightGrams}g</h1>
-            </Paper>
+            <InfoCard Icon={<AspectRatio fontSize="small" />} title="Ratio">
+              <Typography fontWeight={"600"} variant="h5">
+                1/16
+              </Typography>
+            </InfoCard>
+            <InfoCard Icon={<Scale fontSize="small" />} title="Grams">
+              <Typography fontWeight={"600"} variant="h4">
+                {weightGrams}g
+              </Typography>
+            </InfoCard>
             <Button variant="outlined" onClick={() => setZeroWeights()}>
               Set Zero Weight
             </Button>
