@@ -9,7 +9,7 @@ const useWeightsQuery = () => {
     queryKey: ["weightsData"],
     queryFn: async () => {
       try {
-        const response = await fetch("http://weights.local", {
+        const response = await fetch("http://weights.local/weights", {
           signal: AbortSignal.timeout(500),
         });
         const data = await response.text();
