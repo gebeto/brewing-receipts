@@ -5,7 +5,7 @@ import {
   StepDefinition,
   ReceiptDefinition,
 } from "../../receipts";
-import { Timer } from "../../Timer";
+import { Timer } from "../../components/Timer";
 
 import goosneckSrc from "../../assets/goosneck.png";
 import waitSrc from "../../assets/wait.png";

@@ -1,7 +1,14 @@
 import React from "react";
 import { WeightsContext, WeightsProvider } from "../../components/weights";
-import { Box, Button, Paper, Typography } from "@mui/material";
-import { AspectRatio, Scale } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  Paper,
+  Typography,
+} from "@mui/material";
+import { Add, AspectRatio, Remove, Scale } from "@mui/icons-material";
 
 const InfoCard: React.FC<{
   Icon: React.ReactNode;
@@ -32,34 +39,66 @@ const InfoCard: React.FC<{
 );
 
 export const Weights: React.FC = () => {
+  const [aspectRatio, setAspectRatio] = React.useState(16);
   return (
     <WeightsProvider>
       <WeightsContext.Consumer>
         {({ weightGrams, setZeroWeights }) => (
-          <Paper
+          <Box
             sx={{
-              mt: 3,
-              p: 2,
-              width: 400,
               display: "flex",
-              flexDirection: "column",
-              gap: 2,
+              alignItems: "center",
+              justifyContent: "center",
+              flex: 1,
             }}
           >
-            <InfoCard Icon={<AspectRatio fontSize="small" />} title="Ratio">
-              <Typography fontWeight={"600"} variant="h5">
-                1/16
-              </Typography>
-            </InfoCard>
-            <InfoCard Icon={<Scale fontSize="small" />} title="Grams">
-              <Typography fontWeight={"600"} variant="h4">
-                {weightGrams.toFixed(1)}g
-              </Typography>
-            </InfoCard>
-            <Button variant="outlined" onClick={() => setZeroWeights()}>
-              Set Zero Weight
-            </Button>
-          </Paper>
+            <Paper
+              sx={{
+                mt: 3,
+                p: 2,
+                width: 400,
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+              }}
+            >
+              <InfoCard
+                Icon={<Scale fontSize="small" />}
+                title="Coffee Weights"
+              >
+                <Typography fontWeight={"600"} variant="h4">
+                  {weightGrams.toFixed(1)}g
+                </Typography>
+              </InfoCard>
+              <InfoCard Icon={<AspectRatio fontSize="small" />} title="Ratio">
+                <Box sx={{ display: "flex", gap: 1 }}>
+                  <IconButton
+                    size="small"
+                    onClick={() => setAspectRatio((ar) => ar - 1)}
+                  >
+                    <Remove fontSize="small" />
+                  </IconButton>
+                  <Typography fontWeight={"600"} variant="h5">
+                    1/{aspectRatio}
+                  </Typography>
+                  <IconButton
+                    size="small"
+                    onClick={() => setAspectRatio((ar) => ar + 1)}
+                  >
+                    <Add fontSize="small" />
+                  </IconButton>
+                </Box>
+              </InfoCard>
+              <InfoCard Icon={<Scale fontSize="small" />} title="Water Weights">
+                <Typography fontWeight={"600"} variant="h4">
+                  {(weightGrams * aspectRatio).toFixed(1)}g
+                </Typography>
+              </InfoCard>
+              <Button variant="outlined" onClick={() => setZeroWeights()}>
+                Set Zero Weight
+              </Button>
+            </Paper>
+          </Box>
         )}
       </WeightsContext.Consumer>
     </WeightsProvider>

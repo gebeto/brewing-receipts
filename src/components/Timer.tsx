@@ -1,5 +1,5 @@
 import React from "react";
-import { beep, BeepType } from "./utils/beep";
+import { beep, BeepType } from "../utils/beep";
 
 const useTimer = (seconds: number, active: boolean, onDone?: () => void) => {
   const [time, setTime] = React.useState(seconds);
