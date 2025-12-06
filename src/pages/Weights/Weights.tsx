@@ -1,5 +1,5 @@
 import React from "react";
-import { WeightsContext, WeightsProvider } from "../components/weights";
+import { WeightsContext, WeightsProvider } from "../../components/weights";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { AspectRatio, Scale } from "@mui/icons-material";
 

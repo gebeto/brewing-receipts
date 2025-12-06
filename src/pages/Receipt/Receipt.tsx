@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { AnimatePresence, motion } from "motion/react";
-import { ReceiptDefinition, receipts } from "../receipts";
+import { ReceiptDefinition, receipts } from "../../receipts";
 import { Step } from "./Step";
 import { useParams } from "react-router";
 import { Header } from "./Header";
@@ -23,6 +23,7 @@ const ReceiptRoot = styled(motion.div)`
   flex-direction: column;
   flex: 1;
   width: 100%;
+  box-sizing: border-box;
 `;
 
 const StepRoot = styled(motion.div)`

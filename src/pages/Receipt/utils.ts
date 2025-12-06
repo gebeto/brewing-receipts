@@ -1,4 +1,4 @@
-import { ReceiptDefinition } from "../receipts";
+import { ReceiptDefinition } from "../../receipts";
 
 export const calcReceiptVolume = (receipt: ReceiptDefinition) => {
   return receipt.steps.reduce((acc, step) => {

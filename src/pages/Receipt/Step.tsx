@@ -4,12 +4,12 @@ import {
   StepDefinitionWait,
   StepDefinition,
   ReceiptDefinition,
-} from "../receipts";
-import { Timer } from "../Timer";
+} from "../../receipts";
+import { Timer } from "../../Timer";
 
-import goosneckSrc from "../assets/goosneck.png";
-import waitSrc from "../assets/wait.png";
-import { useWeights } from "../components/weights";
+import goosneckSrc from "../../assets/goosneck.png";
+import waitSrc from "../../assets/wait.png";
+import { useWeights } from "../../components/weights";
 import { Box, Divider, Typography } from "@mui/material";
 
 export type StepProps<T extends StepDefinition> = {

@@ -1,8 +1,8 @@
 import { HashRouter as Router, Routes, Route, Link } from "react-router";
 
 import { receipts } from "./receipts";
-import { Receipt } from "./Receipt";
-import { Weights } from "./Weights";
+import { Receipt } from "./pages/Receipt";
+import { Weights } from "./pages/Weights";
 import {
   Divider,
   List,
