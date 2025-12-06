@@ -1,6 +1,22 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { WeightsContext } from "./WeightsContext";
+import { useControls } from "leva";
+
+const useDummyWeightsValue = () => {
+  const { weights } = useControls({
+    weights: {
+      value: 0,
+      min: 0,
+      max: 5000,
+      step: 1,
+    },
+  });
+  return {
+    weightGrams: weights / 10,
+    setZeroWeights: () => {},
+  };
+};
 
 const useWeightsQuery = () => {
   const isInitialLoadedRef = React.useRef(false);
@@ -40,10 +56,14 @@ const useWeightsQuery = () => {
   };
 };
 
+const useWeights = import.meta.env.VITE_DUMMY_WEIGHTS
+  ? useDummyWeightsValue
+  : useWeightsQuery;
+
 export const WeightsProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const { weightGrams, setZeroWeights } = useWeightsQuery();
+  const { weightGrams, setZeroWeights } = useWeights();
 
   return (
     <WeightsContext.Provider value={{ weightGrams, setZeroWeights }}>

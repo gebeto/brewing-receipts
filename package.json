@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:dummy": "VITE_DUMMY_WEIGHTS=true vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -16,6 +17,7 @@
     "@mui/icons-material": "^7.3.5",
     "@mui/material": "^7.3.5",
     "@tanstack/react-query": "^5.90.8",
+    "leva": "^0.10.1",
     "motion": "^11.16.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

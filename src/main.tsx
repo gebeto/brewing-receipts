@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { styled } from "@mui/material/styles";
-import { Add, Scale, Search } from "@mui/icons-material";
+import { Scale, Search } from "@mui/icons-material";
 
 const StyledFab = styled(Fab)({
   position: "absolute",

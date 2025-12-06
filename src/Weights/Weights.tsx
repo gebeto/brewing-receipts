@@ -53,7 +53,7 @@ export const Weights: React.FC = () => {
             </InfoCard>
             <InfoCard Icon={<Scale fontSize="small" />} title="Grams">
               <Typography fontWeight={"600"} variant="h4">
-                {weightGrams}g
+                {weightGrams.toFixed(1)}g
               </Typography>
             </InfoCard>
             <Button variant="outlined" onClick={() => setZeroWeights()}>
