@@ -1,9 +1,15 @@
 import React from "react";
-import { motion } from "motion/react";
 import { ReceiptDefinition } from "../receipts";
 import { useNavigate } from "react-router";
 import { calcReceiptBrewingTime, calcReceiptVolume } from "./utils";
-import { Button } from "../components/Button";
+import {
+  AppBar,
+  Divider,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { ArrowBack } from "@mui/icons-material";
 
 export const Header: React.FC<{ receipt: ReceiptDefinition }> = ({
   receipt,
@@ -18,30 +24,34 @@ export const Header: React.FC<{ receipt: ReceiptDefinition }> = ({
   }, [receipt]);
 
   return (
-    <motion.div
-      style={{
-        position: "sticky",
-        top: 0,
-        left: 0,
-        width: "100%",
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 16,
-        borderBottom: "1px solid #ddd",
-        backgroundColor: "#fff",
-        borderRadius: 0,
-        padding: 16,
-      }}
-    >
-      <Button onClick={() => navigate("/")}>{"<"}</Button>
-      <motion.div>
-        <motion.h3>{receipt.title}</motion.h3>
-        <motion.h6>
+    <AppBar position="static">
+      <Toolbar>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          sx={{ mr: 2 }}
+          onClick={() => navigate("/")}
+        >
+          <ArrowBack />
+        </IconButton>
+
+        <Typography variant="h6" color="inherit" component="span">
+          {receipt.title}
+        </Typography>
+
+        <Divider orientation="vertical" sx={{ mx: 2 }} />
+
+        <Typography variant="h6" color="inherit" component="span">
           Time: {receiptBrewingTime}, {receiptVolume}ml
-        </motion.h6>
-        <motion.h6>Volume: {receiptVolume}ml</motion.h6>
-      </motion.div>
-    </motion.div>
+        </Typography>
+
+        <Divider orientation="vertical" sx={{ mx: 2 }} />
+
+        <Typography variant="h6" color="inherit" component="span">
+          Volume: {receiptVolume}ml
+        </Typography>
+      </Toolbar>
+    </AppBar>
   );
 };

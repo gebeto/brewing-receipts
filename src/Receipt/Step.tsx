@@ -9,6 +9,8 @@ import { Timer } from "../Timer";
 
 import goosneckSrc from "../assets/goosneck.png";
 import waitSrc from "../assets/wait.png";
+import { useWeights } from "../components/weights";
+import { Box, Divider, Typography } from "@mui/material";
 
 export type StepProps<T extends StepDefinition> = {
   step: T;
@@ -26,27 +28,29 @@ const StepHeader: React.FC<{
   children: React.ReactNode;
 }> = (props) => {
   return (
-    <motion.div
-      style={{
-        borderBottom: "1px solid #ddd",
+    <Box
+      sx={{
         display: "flex",
         flexDirection: "row",
+        alignItems: "center",
+        height: "60px",
       }}
     >
-      <motion.h3
-        style={{
-          padding: 16,
-          borderRight: "1px solid #ddd",
-          width: 40,
-          lineHeight: "40px",
+      <Typography
+        variant="subtitle2"
+        component="div"
+        sx={{
+          width: "60px",
+          lineHeight: "60px",
         }}
       >
         {props.index + 1}/{props.count}
-      </motion.h3>
-      <motion.h2 style={{ padding: 16, lineHeight: "40px" }}>
+      </Typography>
+      <Divider orientation="vertical" sx={{ height: 24 }} />
+      <Typography variant="h5" sx={{ px: 2 }}>
         {props.children}
-      </motion.h2>
-    </motion.div>
+      </Typography>
+    </Box>
   );
 };
 
@@ -56,6 +60,7 @@ export const StepWait = (props: StepProps<StepDefinitionWait>) => {
       <StepHeader index={props.index} count={10}>
         Wait for {props.step.seconds}
       </StepHeader>
+      <Divider />
       <motion.img
         src={waitSrc}
         alt="wait"
@@ -87,11 +92,13 @@ export const StepWait = (props: StepProps<StepDefinitionWait>) => {
 };
 
 export const StepPoor = (props: StepProps<StepDefinitionPoor>) => {
+  const { weightGrams } = useWeights();
   return (
     <div>
       <StepHeader index={props.index} count={props.receipt.steps.length}>
-        Poor {props.step.volume}ml
+        Poor {props.step.volume}ml / {weightGrams}g
       </StepHeader>
+      <Divider />
       <motion.img
         src={goosneckSrc}
         alt="poor"
