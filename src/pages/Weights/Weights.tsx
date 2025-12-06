@@ -1,13 +1,6 @@
 import React from "react";
 import { WeightsContext, WeightsProvider } from "../../components/weights";
-import {
-  Box,
-  Button,
-  Divider,
-  IconButton,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Button, IconButton, Paper, Typography } from "@mui/material";
 import { Add, AspectRatio, Remove, Scale } from "@mui/icons-material";
 
 const InfoCard: React.FC<{
